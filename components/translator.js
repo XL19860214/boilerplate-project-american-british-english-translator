@@ -9,9 +9,23 @@ const britishToAmericanTitles = {};
 for (const {key, value} of Object.entries(americanToBritishTitles)) {
   britishToAmericanTitles[value] = key;
 }
-const britishOnly = require('./british-only.js')
+const britishOnly = require('./british-only.js');
 
-const punctuations = [',', '.', '?', '!'];
+const libraries = {
+  'american-to-british': [
+    Object.entries(americanOnly).reverse(),
+    Object.entries(americanToBritishSpelling),
+    Object.entries(americanToBritishTitles)
+  ],
+  'british-to-american': [
+    Object.entries(britishOnly).reverse(),
+    Object.entries(britishToAmericanSpelling),
+    Object.entries(britishToAmericanTitles)
+  ]
+}
+
+const punctuationsInTheMiddle = [',', ';'];
+const punctuationsAtTheEnd = ['.', '?', '!'];
 const upperCaseCharCodes = [65, 90];
 const lowerCaseCharCodes = [97, 122];
 
@@ -32,137 +46,21 @@ class Translator {
     let translated = false;
     let translation = text;
 
-    if (locale === 'american-to-british') {
-      for (const [key, value] of Object.entries(americanOnly).reverse()) {
+    libraries[locale].forEach(library => {
+      for (const [key, value] of library) {
 
         let regExp = new RegExp(key, 'gi');
         
         let matchIndex = translation.search(regExp);
         if (matchIndex !== -1) {
-          // console.log(matchIndex); // DEBUG
           let matches = translation.match(regExp);
           let partToTranslate = translation.substring(matchIndex, matchIndex + key.length)
-          // console.log(`partToTranslate`, partToTranslate); // DEBUG
-          translation  = translation.replace(regExp, `{${value}}`);
+          translation  = translation.replace(regExp, `<span class="highlight">${value}</span>`);
           //
           translated = true;
         }
       }
-
-      words = translation.split(' ');
-
-      translatedWords = words.map(rawWord => {
-        let word = rawWord;
-        let punctuation;
-        const wordEnd = rawWord[rawWord.length - 1];
-        if (punctuations.includes(wordEnd)) {
-          punctuation = wordEnd;
-          word = rawWord.substring(0, rawWord.length - 1);
-        }
-
-        let capCase = false;
-        if (word.charCodeAt(0) >= upperCaseCharCodes[0] && word.charCodeAt(0) <= upperCaseCharCodes[1]) {
-          capCase = true;
-          word = word.toLowerCase();
-        }
-
-        let translatedWord = word;
-
-        if (americanToBritishSpelling.hasOwnProperty(word)) {
-          translated = true;
-          translatedWord = `{${americanToBritishSpelling[word]}}`;
-        } else if (americanToBritishTitles.hasOwnProperty(word)) {
-          translated = true;
-          translatedWord = `{${americanToBritishTitles[word]}}`;
-        } else if (/^\d{1,2}:\d{2}$/.test(word)) {
-          translated = true;
-          translatedWord = `{${word.replace(':', '.')}}`;
-        }
-
-        if (capCase) {
-          translatedWord = translatedWord.substring(0, 1).toUpperCase() + translatedWord.substring(1);
-        }
-
-        if (punctuation !== undefined) {
-          return translatedWord + punctuation;
-        }
-        return translatedWord;
-      });
-
-      translatedWords = translatedWords.map(translatedWord => {
-        if (translatedWord.includes('{')) {
-          translatedWord = translatedWord.replace('{', '<span class="highlight">');
-        }
-        if (translatedWord.includes('}')) {
-          translatedWord = translatedWord.replace('}', '</span>');
-        }
-        return translatedWord;
-      });
-
-      // console.log(`translatedWords`, translatedWords); // DEBUG
-
-      translation = translatedWords.join(' ');
-
-    } else if (locale === 'british-to-american') {
-      for (const [key, value] of Object.entries(britishOnly).reverse()) {
-        if (translation.includes(key)) {
-          translated = true;
-          translation = translation.replace(key, `{${value}}`);
-        }
-      }
-
-      words = translation.split(' ');
-
-      translatedWords = words.map(rawWord => {
-        let word = rawWord;
-        let punctuation;
-        const wordEnd = rawWord[rawWord.length - 1];
-        if (punctuations.includes(wordEnd)) {
-          punctuation = wordEnd;
-          word = rawWord.substring(0, rawWord.length - 1);
-        }
-
-        let capCase = false;
-        if (word.charCodeAt(0) >= upperCaseCharCodes[0] && word.charCodeAt(0) <= upperCaseCharCodes[1]) {
-          capCase = true;
-          word = word.toLowerCase();
-        }
-
-        let translatedWord = word;
-
-        if (britishToAmericanSpelling.hasOwnProperty(word)) {
-          translated = true;
-          translatedWord = `{${britishToAmericanSpelling[word]}}`;
-        } else if (britishToAmericanTitles.hasOwnProperty(word)) {
-          translated = true;
-          translatedWord = `{${britishToAmericanTitles[word]}}`;
-        } else if (/^\d{1,2}\.\d{2}$/.test(word)) {
-          translated = true;
-          translatedWord = `{${word.replace('.', ':')}}`;
-        }
-
-        if (capCase) {
-          translatedWord = translatedWord.substring(0, 1).toUpperCase() + translatedWord.substring(1);
-        }
-        
-        if (punctuation !== undefined) {
-          return translatedWord + punctuation;
-        }
-        return translatedWord;
-      });
-
-      translatedWords = translatedWords.map(translatedWord => {
-        if (translatedWord.includes('{')) {
-          translatedWord = translatedWord.replace('{', '<span class="highlight">');
-        }
-        if (translatedWord.includes('}')) {
-          translatedWord = translatedWord.replace('}', '</span>');
-        }
-        return translatedWord;
-      });
-
-      translation = translatedWords.join(' ');
-    }
+    });
 
     if (translated) {
       return translation;
