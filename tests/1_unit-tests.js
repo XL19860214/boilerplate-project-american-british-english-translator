@@ -8,7 +8,8 @@ const tests = [
   ['Mangoes are my favorite fruit.','american-to-british', 'Mangoes are my <span class="highlight">favourite</span> fruit.'],
   ['I ate yogurt for breakfast.', 'american-to-british', 'I ate <span class="highlight">yoghurt</span> for breakfast.'],
   ["We had a party at my friend's condo.", 'american-to-british', `We had a party at my friend's <span class="highlight">flat</span>.`],
-  ['Can you toss this in the trashcan for me?', 'american-to-british', 'Can you toss this in the <span class="highlight">bin</span> for me?']
+  ['Can you toss this in the trashcan for me?', 'american-to-british', 'Can you toss this in the <span class="highlight">bin</span> for me?'],
+  ['The parking lot was full.', 'american-to-british', 'The <span class="highlight">car park</span> was full.']
 ];
 
 suite('Unit Tests', () => {
@@ -36,6 +37,11 @@ suite('Unit Tests', () => {
     done();
   });
 
-  
+  // #5
+  test('Translate The parking lot was full. to British English', done => {
+    assert.equal(translator.translate(tests[4][0], tests[4][1]), tests[4][2]);
+    done();
+  });
+
 
 });

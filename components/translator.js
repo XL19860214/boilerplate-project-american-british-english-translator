@@ -15,11 +15,21 @@ const punctuations = [',', '.', '?', '!'];
 
 class Translator {
   translate(text, locale) {
-    const words = text.split(' ');
+    let words;
     let translatedWords;
     let translated = false;
+    let translation = text;
 
     if (locale === 'american-to-british') {
+      for (const [key, value] of Object.entries(americanOnly).reverse()) {
+          if (translation.includes(key)) {
+            translated = true;
+            translation = translation.replace(key, `{${value}}`);
+          }
+      }
+
+      words = translation.split(' ');
+
       translatedWords = words.map(rawWord => {
         let word = rawWord;
         let punctuation;
@@ -31,18 +41,15 @@ class Translator {
 
         let translatedWord = word;
 
-        if (americanOnly.hasOwnProperty(word)) {
+        if (americanToBritishSpelling.hasOwnProperty(word)) {
           translated = true;
-          translatedWord = `<span class="highlight">${americanOnly[word]}</span>`;
-        } else if (americanToBritishSpelling.hasOwnProperty(word)) {
-          translated = true;
-          translatedWord = `<span class="highlight">${americanToBritishSpelling[word]}</span>`;
+          translatedWord = `{${americanToBritishSpelling[word]}}`;
         } else if (americanToBritishTitles.hasOwnProperty(word)) {
           translated = true;
-          translatedWord = `<span class="highlight">${americanToBritishTitles[word]}</span>`;
+          translatedWord = `{${americanToBritishTitles[word]}}`;
         } else if (/^\d{1,2}:\d{2}$/.test(word)) {
           translated = true;
-          translatedWord = `<span class="highlight">${word.replace(':', '.')}</span>`;
+          translatedWord = `{${word.replace(':', '.')}}`;
         }
 
         if (punctuation !== undefined) {
@@ -50,7 +57,31 @@ class Translator {
         }
         return translatedWord;
       });
+
+      translatedWords = translatedWords.map(translatedWord => {
+        if (translatedWord.includes('{')) {
+          translatedWord = translatedWord.replace('{', '<span class="highlight">');
+        }
+        if (translatedWord.includes('}')) {
+          translatedWord = translatedWord.replace('}', '</span>');
+        }
+        return translatedWord;
+      });
+
+      // console.log(`translatedWords`, translatedWords); // DEBUG
+
+      translation = translatedWords.join(' ');
+
     } else if (locale === 'british-to-american') {
+      for (const [key, value] of Object.entries(britishOnly).reverse()) {
+          if (translation.includes(key)) {
+            translated = true;
+            translation = translation.replace(key, `{${value}}`);
+          }
+      }
+
+      words = translation.split(' ');
+
       translatedWords = words.map(rawWord => {
         let word = rawWord;
         let punctuation;
@@ -62,18 +93,15 @@ class Translator {
 
         let translatedWord = word;
 
-        if (britishOnly.hasOwnProperty(word)) {
+        if (britishToAmericanSpelling.hasOwnProperty(word)) {
           translated = true;
-          translatedWord = `<span class="highlight">${britishOnly[word]}</span>`;
-        } else if (britishToAmericanSpelling.hasOwnProperty(word)) {
-          translated = true;
-          translatedWord = `<span class="highlight">${britishToAmericanSpelling[word]}</span>`;
+          translatedWord = `{${britishToAmericanSpelling[word]}}`;
         } else if (britishToAmericanTitles.hasOwnProperty(word)) {
           translated = true;
-          translatedWord = `<span class="highlight">${britishToAmericanTitles[word]}</span>`;
+          translatedWord = `{${britishToAmericanTitles[word]}}`;
         } else if (/^\d{1,2}\.\d{2}$/.test(word)) {
           translated = true;
-          translatedWord = `<span class="highlight">${word.replace('.', ':')}</span>`;
+          translatedWord = `{${word.replace('.', ':')}}`;
         }
         
         if (punctuation !== undefined) {
@@ -81,10 +109,22 @@ class Translator {
         }
         return translatedWord;
       });
+
+      translatedWords = translatedWords.map(translatedWord => {
+        if (translatedWord.includes('{')) {
+          translatedWord = translatedWord.replace('{', '<span class="highlight">');
+        }
+        if (translatedWord.includes('}')) {
+          translatedWord = translatedWord.replace('}', '</span>');
+        }
+        return translatedWord;
+      });
+
+      translation = translatedWords.join(' ');
     }
 
     if (translated) {
-      return translatedWords.join(' ');
+      return translation;
     }
     return 'Everything looks good to me!';
   }
