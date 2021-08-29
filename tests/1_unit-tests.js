@@ -13,6 +13,7 @@ const tests = [
   ['Like a high tech Rube Goldberg machine.', 'american-to-british', 'Like a high tech <span class="highlight">Heath Robinson device</span>.'],
   ['To play hooky means to skip class or work.', 'american-to-british', 'To <span class="highlight">bunk off</span> means to skip class or work.'],
   ['No Mr. Bond, I expect you to die.', 'american-to-british', 'No <span class="highlight">Mr</span> Bond, I expect you to die.'],
+  ['Dr. Grosh will see you now.', 'american-to-british', '<span class="highlight">Dr</span> Grosh will see you now.']
 ];
 
 suite('Unit Tests', () => {
@@ -61,6 +62,12 @@ suite('Unit Tests', () => {
   // #8
   test('Translate No Mr. Bond, I expect you to die. to British English', done => {
     assert.equal(translator.translate(tests[7][0], tests[7][1]), tests[7][2]);
+    done();
+  });
+
+  // #9
+  test('Translate Dr. Grosh will see you now. to British English', done => {
+    assert.equal(translator.translate(tests[8][0], tests[8][1]), tests[8][2]);
     done();
   });
 

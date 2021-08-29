@@ -41,16 +41,12 @@ class Translator {
   }
 
   translate(text, locale) {
-    let words;
-    let translatedWords;
     let translated = false;
     let translation = text;
 
     libraries[locale].forEach(library => {
       for (const [key, value] of library) {
-
         let regExp = new RegExp(key, 'gi');
-        
         let matchIndex = translation.search(regExp);
         if (matchIndex !== -1) {
           let matches = translation.match(regExp);
