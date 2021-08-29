@@ -12,8 +12,20 @@ for (const {key, value} of Object.entries(americanToBritishTitles)) {
 const britishOnly = require('./british-only.js')
 
 const punctuations = [',', '.', '?', '!'];
+const upperCaseCharCodes = [65, 90];
+const lowerCaseCharCodes = [97, 122];
 
 class Translator {
+
+  stringHasUpperCase(str) {
+    for (let i = 0; i < str.length; i++) {
+      if (str.charCodeAt(i) >= upperCaseCharCodes[0] && str.charCodeAt(i) <= upperCaseCharCodes[1]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   translate(text, locale) {
     let words;
     let translatedWords;
@@ -22,10 +34,19 @@ class Translator {
 
     if (locale === 'american-to-british') {
       for (const [key, value] of Object.entries(americanOnly).reverse()) {
-          if (translation.includes(key)) {
-            translated = true;
-            translation = translation.replace(key, `{${value}}`);
-          }
+
+        let regExp = new RegExp(key, 'gi');
+        
+        let matchIndex = translation.search(regExp);
+        if (matchIndex !== -1) {
+          // console.log(matchIndex); // DEBUG
+          let matches = translation.match(regExp);
+          let partToTranslate = translation.substring(matchIndex, matchIndex + key.length)
+          // console.log(`partToTranslate`, partToTranslate); // DEBUG
+          translation  = translation.replace(regExp, `{${value}}`);
+          //
+          translated = true;
+        }
       }
 
       words = translation.split(' ');
@@ -39,6 +60,12 @@ class Translator {
           word = rawWord.substring(0, rawWord.length - 1);
         }
 
+        let capCase = false;
+        if (word.charCodeAt(0) >= upperCaseCharCodes[0] && word.charCodeAt(0) <= upperCaseCharCodes[1]) {
+          capCase = true;
+          word = word.toLowerCase();
+        }
+
         let translatedWord = word;
 
         if (americanToBritishSpelling.hasOwnProperty(word)) {
@@ -50,6 +77,10 @@ class Translator {
         } else if (/^\d{1,2}:\d{2}$/.test(word)) {
           translated = true;
           translatedWord = `{${word.replace(':', '.')}}`;
+        }
+
+        if (capCase) {
+          translatedWord = translatedWord.substring(0, 1).toUpperCase() + translatedWord.substring(1);
         }
 
         if (punctuation !== undefined) {
@@ -74,10 +105,10 @@ class Translator {
 
     } else if (locale === 'british-to-american') {
       for (const [key, value] of Object.entries(britishOnly).reverse()) {
-          if (translation.includes(key)) {
-            translated = true;
-            translation = translation.replace(key, `{${value}}`);
-          }
+        if (translation.includes(key)) {
+          translated = true;
+          translation = translation.replace(key, `{${value}}`);
+        }
       }
 
       words = translation.split(' ');
@@ -91,6 +122,12 @@ class Translator {
           word = rawWord.substring(0, rawWord.length - 1);
         }
 
+        let capCase = false;
+        if (word.charCodeAt(0) >= upperCaseCharCodes[0] && word.charCodeAt(0) <= upperCaseCharCodes[1]) {
+          capCase = true;
+          word = word.toLowerCase();
+        }
+
         let translatedWord = word;
 
         if (britishToAmericanSpelling.hasOwnProperty(word)) {
@@ -102,6 +139,10 @@ class Translator {
         } else if (/^\d{1,2}\.\d{2}$/.test(word)) {
           translated = true;
           translatedWord = `{${word.replace('.', ':')}}`;
+        }
+
+        if (capCase) {
+          translatedWord = translatedWord.substring(0, 1).toUpperCase() + translatedWord.substring(1);
         }
         
         if (punctuation !== undefined) {
@@ -128,6 +169,7 @@ class Translator {
     }
     return 'Everything looks good to me!';
   }
+
 }
 
 module.exports = Translator;
