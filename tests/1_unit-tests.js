@@ -35,4 +35,12 @@ suite('Unit Tests', () => {
     done();
   });
 
+  // #4
+  test('Translate Can you toss this in the trashcan for me? to British English', done => {
+    assert.equal(translator.translate('Can you toss this in the trashcan for me?', 'american-to-british'),
+    'Can you toss this in the <span class="highlight">bin</span> for me?'
+    );
+    done();
+  });
+
 });
