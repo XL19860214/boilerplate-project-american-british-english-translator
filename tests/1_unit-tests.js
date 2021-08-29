@@ -4,6 +4,12 @@ const assert = chai.assert;
 const Translator = require('../components/translator.js');
 const translator = new Translator();
 
+const tests = [
+  ['Mangoes are my favorite fruit.',
+  'Mangoes are my <span class="highlight">favourite</span> fruit.'],
+
+];
+
 suite('Unit Tests', () => {
   // #1
   test('Translate Mangoes are my favorite fruit. to British English', done => {
@@ -13,6 +19,20 @@ suite('Unit Tests', () => {
     done();
   });
 
+  // #2
+  test('Translate I ate yogurt for breakfast. to British English', done => {
+    assert.equal(translator.translate('I ate yogurt for breakfast.', 'american-to-british'),
+    'I ate <span class="highlight">yoghurt</span> for breakfast.'
+    );
+    done();
+  });
 
+  // #3
+  test("Translate We had a party at my friend's condo. to British English", done => {
+    assert.equal(translator.translate("We had a party at my friend's condo.", 'american-to-british'),
+    `We had a party at my friend's <span class="highlight">flat</span>.`
+    );
+    done();
+  });
 
 });
