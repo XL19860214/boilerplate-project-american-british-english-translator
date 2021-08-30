@@ -5,26 +5,27 @@ const Translator = require('../components/translator.js');
 const translator = new Translator();
 
 const tests = [
-  ['Mangoes are my favorite fruit.','american-to-british', 'Mangoes are my <span class="highlight">favourite</span> fruit.'], // #1
-  ['I ate yogurt for breakfast.', 'american-to-british', 'I ate <span class="highlight">yoghurt</span> for breakfast.'], // #2
-  ["We had a party at my friend's condo.", 'american-to-british', `We had a party at my friend's <span class="highlight">flat</span>.`], // #3
-  ['Can you toss this in the trashcan for me?', 'american-to-british', 'Can you toss this in the <span class="highlight">bin</span> for me?'], // #4
-  ['The parking lot was full.', 'american-to-british', 'The <span class="highlight">car park</span> was full.'], // #5
-  ['Like a high tech Rube Goldberg machine.', 'american-to-british', 'Like a high tech <span class="highlight">Heath Robinson device</span>.'], // #6
-  ['To play hooky means to skip class or work.', 'american-to-british', 'To <span class="highlight">bunk off</span> means to skip class or work.'], // #7
-  ['No Mr. Bond, I expect you to die.', 'american-to-british', 'No <span class="highlight">Mr</span> Bond, I expect you to die.'], // #8
-  ['Dr. Grosh will see you now.', 'american-to-british', '<span class="highlight">Dr</span> Grosh will see you now.'], // #9
-  ['Lunch is at 12:15 today.', 'american-to-british', 'Lunch is at <span class="highlight">12.15</span> today.'], // #10
-  ['We watched the footie match for a while.', 'british-to-american', 'We watched the <span class="highlight">soccer</span> match for a while.'], // #11
-  ['Paracetamol takes up to an hour to work.', 'british-to-american', '<span class="highlight">Tylenol</span> takes up to an hour to work.'], // #12
-  ['First, caramelise the onions.', 'british-to-american', 'First, <span class="highlight">caramelize</span> the onions.'], // #13
-  ['I spent the bank holiday at the funfair.', 'british-to-american', 'I spent the <span class="highlight">public holiday</span> at the <span class="highlight">carnival</span>.'], // #14
-  ['I had a bicky then went to the chippy.', 'british-to-american', 'I had a <span class="highlight">cookie</span> then went to the <span class="highlight">fish-and-chip shop</span>.'], // #15
-  ["I've just got bits and bobs in my bum bag.", 'british-to-american', `I've just got <span class="highlight">odds and ends</span> in my <span class="highlight">fanny pack</span>.`], // #16
-  ['The car boot sale at Boxted Airfield was called off.', 'british-to-american', 'The <span class="highlight">swap meet</span> at Boxted Airfield was called off.'], // #17
-  ['Have you met Mrs Kalyani?', 'british-to-american', 'Have you met <span class="highlight">Mrs.</span> Kalyani?'], // #18
-  ["Prof Joyner of King's College, London.", 'british-to-american', `<span class="highlight">Prof.</span> Joyner of King's College, London.`], // #19
-  ['Tea time is usually around 4 or 4.30.', 'british-to-american', 'Tea time is usually around 4 or <span class="highlight">4:30</span>.'], // #20
+  ['Mangoes are my favorite fruit.','american-to-british', 'Mangoes are my favourite fruit.'], // #1
+  ['I ate yogurt for breakfast.', 'american-to-british', 'I ate yoghurt for breakfast.'], // #2
+  ["We had a party at my friend's condo.", 'american-to-british', `We had a party at my friend's flat.`], // #3
+  ['Can you toss this in the trashcan for me?', 'american-to-british', 'Can you toss this in the bin for me?'], // #4
+  ['The parking lot was full.', 'american-to-british', 'The car park was full.'], // #5
+  ['Like a high tech Rube Goldberg machine.', 'american-to-british', 'Like a high tech Heath Robinson device.'], // #6
+  ['To play hooky means to skip class or work.', 'american-to-british', 'To bunk off means to skip class or work.'], // #7
+  ['No Mr. Bond, I expect you to die.', 'american-to-british', 'No Mr Bond, I expect you to die.'], // #8
+  ['Dr. Grosh will see you now.', 'american-to-british', 'Dr Grosh will see you now.'], // #9
+  ['Lunch is at 12:15 today.', 'american-to-british', 'Lunch is at 12.15 today.'], // #10
+  ['We watched the footie match for a while.', 'british-to-american', 'We watched the soccer match for a while.'], // #11
+  ['Paracetamol takes up to an hour to work.', 'british-to-american', 'Tylenol takes up to an hour to work.'], // #12
+  ['First, caramelise the onions.', 'british-to-american', 'First, caramelize the onions.'], // #13
+  ['I spent the bank holiday at the funfair.', 'british-to-american', 'I spent the public holiday at the carnival.'], // #14
+  ['I had a bicky then went to the chippy.', 'british-to-american', 'I had a cookie then went to the fish-and-chip shop.'], // #15
+  ["I've just got bits and bobs in my bum bag.", 'british-to-american', `I've just got odds and ends in my fanny pack.`], // #16
+  ['The car boot sale at Boxted Airfield was called off.', 'british-to-american', 'The swap meet at Boxted Airfield was called off.'], // #17
+  ['Have you met Mrs Kalyani?', 'british-to-american', 'Have you met Mrs. Kalyani?'], // #18
+  ["Prof Joyner of King's College, London.", 'british-to-american', `Prof. Joyner of King's College, London.`], // #19
+  ['Tea time is usually around 4 or 4.30.', 'british-to-american', 'Tea time is usually around 4 or 4:30.'], // #20
+  ['Mangoes are my favorite fruit.', 'american-to-british', 'Mangoes are my <span class="highlight">favourite</span> fruit.'], // #21
 ];
 
 suite('Unit Tests', () => {
@@ -150,6 +151,16 @@ suite('Unit Tests', () => {
     // #20
     test('Translate Tea time is usually around 4 or 4.30. to American English', done => {
       assert.equal(translator.translate(tests[19][0], tests[19][1]), tests[19][2]);
+      done();
+    });
+
+  });
+
+  suite('Highlight Tests', () => {
+    
+    // #21
+    test('Highlight translation in Mangoes are my favorite fruit.', done => {
+      assert.equal(translator.translateWithHighlight(tests[20][0], tests[20][1]), tests[20][2]);
       done();
     });
 

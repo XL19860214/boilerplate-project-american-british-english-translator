@@ -59,6 +59,12 @@ class Translator {
   }
 
   translate(text, locale) {
+    const highlightedTranslation = this.translateWithHighlight(text, locale);
+
+    return highlightedTranslation.replace(new RegExp(highlight[0], 'gi'), '').replace(new RegExp(highlight[1], 'gi'), '');
+  }
+
+  translateWithHighlight(text, locale) {
     let translated = false;
     let translation = text;
 
