@@ -22,10 +22,10 @@ module.exports = function (app) {
       if (!['american-to-british', 'british-to-american'].includes(locale)) {
         return res.json({ error: 'Invalid value for locale field' });
       }
-      console.log(translator.translate(text, locale));
+      // console.log(translator.translate(text, locale)); // DEBUG
       res.json({
         text: req.body.text,
-        translation: translator.translate(text, locale)
+        translation: translator.translateWithHighlight(text, locale)
       });
     });
 };
