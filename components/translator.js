@@ -63,9 +63,20 @@ class Translator {
         let matchIndex = translation.search(regExp);
         if (matchIndex !== -1) {
           let partToTranslate = translation.substring(matchIndex, matchIndex + key.length)
-          translation  = translation.replace(regExp, `<span class="highlight">${value}</span>`);
-          //
-          translated = true;
+          translation  = translation.replace(regExp, (match, offset, string) => {
+            // console.log(
+            //   `match`, match,
+            //   `offset`, offset,
+            //   `string`, string,
+            //   `/\W/.test(string[offset - 1])`, /\W/.test(string[offset - 1]),
+            //   `/\W/.test(string[offset + match.length])`, /\W/.test(string[offset + match.length])
+            // ); // DEBUG
+            if ((string[offset - 1] === undefined || /\W/.test(string[offset - 1])) && /\W/.test(string[offset + match.length])) {
+              translated = true;
+              return `<span class="highlight">${value}</span>`;
+            }
+            return match;
+          });
         }
       }
     });

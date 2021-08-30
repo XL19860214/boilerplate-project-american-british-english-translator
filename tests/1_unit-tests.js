@@ -16,6 +16,7 @@ const tests = [
   ['Dr. Grosh will see you now.', 'american-to-british', '<span class="highlight">Dr</span> Grosh will see you now.'], // #9
   ['Lunch is at 12:15 today.', 'american-to-british', 'Lunch is at <span class="highlight">12.15</span> today.'], // #10
   ['We watched the footie match for a while.', 'british-to-american', 'We watched the <span class="highlight">soccer</span> match for a while.'], // #11
+  ['Paracetamol takes up to an hour to work.', 'british-to-american', '<span class="highlight">Tylenol</span> takes up to an hour to work.'], // #12
 ];
 
 suite('Unit Tests', () => {
@@ -87,6 +88,12 @@ suite('Unit Tests', () => {
     // #11
     test('Translate We watched the footie match for a while. to American English', done => {
       assert.equal(translator.translate(tests[10][0], tests[10][1]), tests[10][2]);
+      done();
+    });
+
+    // #12
+    test('Translate Paracetamol takes up to an hour to work. to American English', done => {
+      assert.equal(translator.translate(tests[11][0], tests[11][1]), tests[11][2]);
       done();
     });
   });
