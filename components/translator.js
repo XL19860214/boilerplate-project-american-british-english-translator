@@ -1,12 +1,12 @@
 const americanOnly = require('./american-only.js');
 const americanToBritishSpelling = require('./american-to-british-spelling.js');
-const britishToAmericanSpelling = {};
-for (const {key, value} of Object.entries(americanToBritishSpelling)) {
+let britishToAmericanSpelling = {};
+for (const [key, value] of Object.entries(americanToBritishSpelling)) {
   britishToAmericanSpelling[value] = key;
 }
 const americanToBritishTitles = require("./american-to-british-titles.js")
 const britishToAmericanTitles = {};
-for (const {key, value} of Object.entries(americanToBritishTitles)) {
+for (const [key, value] of Object.entries(americanToBritishTitles)) {
   britishToAmericanTitles[value] = key;
 }
 const britishOnly = require('./british-only.js');
