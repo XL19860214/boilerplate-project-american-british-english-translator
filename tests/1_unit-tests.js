@@ -26,6 +26,9 @@ const tests = [
   ["Prof Joyner of King's College, London.", 'british-to-american', `Prof. Joyner of King's College, London.`], // #19
   ['Tea time is usually around 4 or 4.30.', 'british-to-american', 'Tea time is usually around 4 or 4:30.'], // #20
   ['Mangoes are my favorite fruit.', 'american-to-british', 'Mangoes are my <span class="highlight">favourite</span> fruit.'], // #21
+  ['I ate yogurt for breakfast.', 'american-to-british', 'I ate <span class="highlight">yoghurt</span> for breakfast.'], // #22
+  ['We watched the footie match for a while.', 'british-to-american', 'We watched the <span class="highlight">soccer</span> match for a while.'], // #23
+  ['Paracetamol takes up to an hour to work.', 'british-to-american', '<span class="highlight">Tylenol</span> takes up to an hour to work.'], // #24
 ];
 
 suite('Unit Tests', () => {
@@ -164,6 +167,23 @@ suite('Unit Tests', () => {
       done();
     });
 
+    // #22
+    test('Highlight translation in I ate yogurt for breakfast.', done => {
+      assert.equal(translator.translateWithHighlight(tests[21][0], tests[21][1]), tests[21][2]);
+      done();
+    });
+
+    // #23
+    test('Highlight translation in We watched the footie match for a while.', done => {
+      assert.equal(translator.translateWithHighlight(tests[22][0], tests[22][1]), tests[22][2]);
+      done();
+    });
+
+    // #24
+    test('Highlight translation in Paracetamol takes up to an hour to work.', done => {
+      assert.equal(translator.translateWithHighlight(tests[23][0], tests[23][1]), tests[23][2]);
+      done();
+    });
   });
 
 });
