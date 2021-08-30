@@ -22,7 +22,20 @@ const libraries = {
     Object.entries(britishToAmericanSpelling),
     Object.entries(britishToAmericanTitles)
   ]
-}
+};
+
+const timeFormats = {
+  'american-to-british': {
+    regExp: new RegExp(/\d{1,2}:\d{2}/, 'gi'),
+    split: ':',
+    join: '.'
+  },
+  'british-to-american': {
+    regExp: new RegExp(/\d{1,2}\.\d{2}/, 'gi'),
+    split: '.',
+    join: ':'
+  }
+};
 
 const punctuationsInTheMiddle = [',', ';'];
 const punctuationsAtTheEnd = ['.', '?', '!'];
@@ -49,7 +62,6 @@ class Translator {
         let regExp = new RegExp(key, 'gi');
         let matchIndex = translation.search(regExp);
         if (matchIndex !== -1) {
-          let matches = translation.match(regExp);
           let partToTranslate = translation.substring(matchIndex, matchIndex + key.length)
           translation  = translation.replace(regExp, `<span class="highlight">${value}</span>`);
           //
@@ -57,6 +69,18 @@ class Translator {
         }
       }
     });
+
+    // Time format
+    const {regExp, split, join} = timeFormats[locale];
+    let matchIndex = translation.search(regExp);
+    if (matchIndex !== -1) {
+      const matches = translation.match(regExp);
+      matches.forEach(match => {
+        translation  = translation.replace(match, `<span class="highlight">${match.split(split).join(join)}</span>`);
+      });
+      //
+      translated = true;
+    }
 
     if (translated) {
       return translation;
