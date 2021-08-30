@@ -21,6 +21,7 @@ const tests = [
   ['I spent the bank holiday at the funfair.', 'british-to-american', 'I spent the <span class="highlight">public holiday</span> at the <span class="highlight">carnival</span>.'], // #14
   ['I had a bicky then went to the chippy.', 'british-to-american', 'I had a <span class="highlight">cookie</span> then went to the <span class="highlight">fish-and-chip shop</span>.'], // #15
   ["I've just got bits and bobs in my bum bag.", 'british-to-american', `I've just got <span class="highlight">odds and ends</span> in my <span class="highlight">fanny pack</span>.`], // #16
+  ['The car boot sale at Boxted Airfield was called off.', 'british-to-american', 'The <span class="highlight">swap meet</span> at Boxted Airfield was called off.'], // #17
 ];
 
 suite('Unit Tests', () => {
@@ -122,6 +123,12 @@ suite('Unit Tests', () => {
     // #16
     test("Translate I've just got bits and bobs in my bum bag. to American English", done => {
       assert.equal(translator.translate(tests[15][0], tests[15][1]), tests[15][2]);
+      done();
+    });
+
+    // #17
+    test('Translate The car boot sale at Boxted Airfield was called off. to American English', done => {
+      assert.equal(translator.translate(tests[16][0], tests[16][1]), tests[16][2]);
       done();
     });
 

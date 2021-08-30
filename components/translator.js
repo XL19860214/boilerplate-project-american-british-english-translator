@@ -13,12 +13,12 @@ const britishOnly = require('./british-only.js');
 
 const libraries = {
   'american-to-british': [
-    Object.entries(americanOnly).reverse(),
+    Object.entries(americanOnly),
     Object.entries(americanToBritishSpelling),
     Object.entries(americanToBritishTitles)
   ],
   'british-to-american': [
-    Object.entries(britishOnly).reverse(),
+    Object.entries(britishOnly),
     Object.entries(britishToAmericanSpelling),
     Object.entries(britishToAmericanTitles)
   ]
@@ -42,6 +42,11 @@ const punctuationsAtTheEnd = ['.', '?', '!'];
 const upperCaseCharCodes = [65, 90];
 const lowerCaseCharCodes = [97, 122];
 
+const highlight = [
+  '<span class="highlight">',
+  '</span>'
+]
+
 class Translator {
 
   stringHasUpperCase(str) {
@@ -62,7 +67,6 @@ class Translator {
         let regExp = new RegExp(key, 'gi');
         let matchIndex = translation.search(regExp);
         if (matchIndex !== -1) {
-          let partToTranslate = translation.substring(matchIndex, matchIndex + key.length)
           translation  = translation.replace(regExp, (match, offset, string) => {
             // console.log(
             //   `match`, match,
@@ -72,8 +76,15 @@ class Translator {
             //   `/\W/.test(string[offset + match.length])`, /\W/.test(string[offset + match.length])
             // ); // DEBUG
             if ((string[offset - 1] === undefined || /\W/.test(string[offset - 1])) && /\W/.test(string[offset + match.length])) {
-              translated = true;
-              return `<span class="highlight">${value}</span>`;
+              const precedingPart = string.substring(0, offset);
+              const highlightLeftMatchesInPrecedingPart = precedingPart.match(new RegExp(highlight[0], 'gi'));
+              const highlightRigthMatchesInPrecedingPart = precedingPart.match(new RegExp(highlight[1], 'gi'));
+              if (highlightLeftMatchesInPrecedingPart === null
+                || (highlightRigthMatchesInPrecedingPart !== null && highlightLeftMatchesInPrecedingPart.length === highlightRigthMatchesInPrecedingPart.length)
+              ) {
+                translated = true;
+                return `${highlight[0]}${value}${highlight[1]}`;
+              }
             }
             return match;
           });
@@ -87,7 +98,7 @@ class Translator {
     if (matchIndex !== -1) {
       const matches = translation.match(regExp);
       matches.forEach(match => {
-        translation  = translation.replace(match, `<span class="highlight">${match.split(split).join(join)}</span>`);
+        translation  = translation.replace(match, `${highlight[0]}${match.split(split).join(join)}${highlight[1]}`);
       });
       //
       translated = true;
