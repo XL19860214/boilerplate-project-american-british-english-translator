@@ -44,17 +44,17 @@ suite('Functional Tests', () => {
 
   // #3
   test('Translation with missing text field: POST request to /api/translate', done => {
-      chai.request(server)
-        .post('/api/translate')
-        .send({
-          locale: 'asdfsdf'
-        })
-        .end((err, res) => {
-          assert.isNull(err);
-          assert.equal(res.status, 200);
-          assert.equal(res.body.error, 'Required field(s) missing');
-          done();
-        })
+    chai.request(server)
+      .post('/api/translate')
+      .send({
+        locale: 'asdfsdf'
+      })
+      .end((err, res) => {
+        assert.isNull(err);
+        assert.equal(res.status, 200);
+        assert.equal(res.body.error, 'Required field(s) missing');
+        done();
+      })
   });
 
   // #4
