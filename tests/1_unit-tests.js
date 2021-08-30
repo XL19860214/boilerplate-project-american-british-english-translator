@@ -22,6 +22,7 @@ const tests = [
   ['I had a bicky then went to the chippy.', 'british-to-american', 'I had a <span class="highlight">cookie</span> then went to the <span class="highlight">fish-and-chip shop</span>.'], // #15
   ["I've just got bits and bobs in my bum bag.", 'british-to-american', `I've just got <span class="highlight">odds and ends</span> in my <span class="highlight">fanny pack</span>.`], // #16
   ['The car boot sale at Boxted Airfield was called off.', 'british-to-american', 'The <span class="highlight">swap meet</span> at Boxted Airfield was called off.'], // #17
+  ['Have you met Mrs Kalyani?', 'british-to-american', 'Have you met <span class="highlight">Mrs.</span> Kalyani?'], // #18
 ];
 
 suite('Unit Tests', () => {
@@ -129,6 +130,12 @@ suite('Unit Tests', () => {
     // #17
     test('Translate The car boot sale at Boxted Airfield was called off. to American English', done => {
       assert.equal(translator.translate(tests[16][0], tests[16][1]), tests[16][2]);
+      done();
+    });
+
+    // #18
+    test('Translate Have you met Mrs Kalyani? to American English', done => {
+      assert.equal(translator.translate(tests[17][0], tests[17][1]), tests[17][2]);
       done();
     });
 
